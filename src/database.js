@@ -1,8 +1,7 @@
-import { isUtf8 } from "node:buffer"
 import fs from "node:fs/promises"
 const dbPath = new URL('../db.json', import.meta.url)
 
-export class database {
+export class Database {
   #db = {}
 
   constructor() {
@@ -14,4 +13,14 @@ export class database {
   #persist() {
     fs.writeFile(dbPath, JSON.stringify(this.#db))
   }
+
+  insert(table, data) {
+    if ( Array.isArray(this.#db[table]) ) {
+      this.#db[table].push(data)
+    } else {
+      this.#db[table] = [data]
+    }
+    this.#persist()
+  }
+
 }
