@@ -1,4 +1,5 @@
 import { Database } from "./database.js"
+import { buildRoutePath } from "./utils/buildRoutePath.js"
 import { randomUUID } from "node:crypto"
 
 const database = new Database()
@@ -6,7 +7,7 @@ const database = new Database()
 export default [
   {
     method: "POST",
-    path: "/tasks",
+    path: buildRoutePath("/tasks"),
     handler: (req, res) => {
       const { title, description } = req.body
 
