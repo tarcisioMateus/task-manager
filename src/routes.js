@@ -1,7 +1,8 @@
-import { Database } from "./database"
+import { Database } from "./database.js"
 import { randomUUID } from "node:crypto"
 
 const database = new Database()
+
 export default [
   {
     method: "POST",
@@ -12,9 +13,14 @@ export default [
       const newTask = {
         id: randomUUID(),
         title,
-        description
+        description,
+        completed_at: null,
+        created_at: Date(),
+        updated_at: Date()
       }
-      database.insert('tasks', )
+      database.insert('tasks', newTask)
+
+      return res.writeHead(201).end()
     }
   }
 ]
