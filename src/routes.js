@@ -23,5 +23,16 @@ export default [
 
       return res.writeHead(201).end()
     }
-  }
+  },
+  {
+    method: "GET",
+    path: buildRoutePath("/tasks"),
+    handler: (req, res) => {
+      const { search } = req
+      
+      const data = database.select('tasks', search ? {'title': search} : null )
+
+      return res.writeHead(200).end(data)
+    }
+  },
 ]
