@@ -1,3 +1,4 @@
+import { error } from "node:console"
 import { Database } from "./database.js"
 import { buildRoutePath } from "./utils/buildRoutePath.js"
 import { randomUUID } from "node:crypto"
@@ -10,6 +11,10 @@ export default [
     path: buildRoutePath("/tasks"),
     handler: (req, res) => {
       const { title, description } = req.body
+
+      if ( !title || !description ) {
+        throw new Error('please, fill in all the required fields.')
+      }
 
       const newTask = {
         id: randomUUID(),
@@ -33,6 +38,35 @@ export default [
       const data = database.select('tasks', search ? {'title': search} : null )
 
       return res.writeHead(200).end(data)
+    }
+  },
+  {
+    method: "PUT",
+    path: buildRoutePath("/tasks/:id"),
+    handler: (req, res) => {
+      const { title, description } = req.body
+      const { id } = req.params
+
+      if ( !title && !description ) return res.writeHead(200).end()
+
+      const currentTask = database.select('tasks', {'id': id})[0]
+      if (currentTask.completed_at) {
+        throw new Error('can NOT update an task that has been completed!')
+      }
+
+      const newTitle = title ? title : currentTask.title
+      const newDescription = description ? description : currentTask.description
+
+      const updatedTask = {
+        title: newTitle,
+        description: newDescription,
+        completed_at: null,
+        created_at: currentTask.created_at,
+        updated_at: Date()
+      }
+      database.update('tasks', id, updatedTask)
+
+      return res.writeHead(201).end()
     }
   },
 ]
