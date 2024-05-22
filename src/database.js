@@ -27,7 +27,7 @@ export class Database {
     if (Array.isArray(this.#db[table])) {
 
       if (search) {
-        return this.#db[table].filter((row) => {
+        return this.#db[table].filter( row => {
           return Object.entries(search).some(([key, value])=> {
             return  row[key].toLowerCase().includes(value.toLowerCase())
           })

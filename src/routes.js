@@ -13,7 +13,7 @@ export default [
       const { title, description } = req.body
 
       if ( !title || !description ) {
-        throw new Error('please, fill in all the required fields.')
+        return res.writeHead(400).end('please, fill in all the required fields.')
       }
 
       const newTask = {
@@ -33,7 +33,7 @@ export default [
     method: "GET",
     path: buildRoutePath("/tasks"),
     handler: (req, res) => {
-      const { search } = req
+      const { search } = req.query
       
       const data = database.select('tasks', search ? {'title': search} : null )
 
@@ -47,14 +47,14 @@ export default [
       const { title, description } = req.body
       const { id } = req.params
 
-      if ( !title && !description ) return res.writeHead(200).end()
+      if ( !title && !description ) return res.writeHead(401).end("there's nothing to be updated")
 
       const currentTask = database.select('tasks', {'id': id})[0]
       if (!currentTask) {
-        throw new Error('non-existent task')
+        return res.writeHead(404).end('non-existent task')
       }
       if (currentTask.completed_at) {
-        throw new Error('can NOT update an task that has been completed!')
+        return res.writeHead(403).end('can NOT update an task that has been completed!')
       }
 
       const newTitle = title ? title : currentTask.title
@@ -95,7 +95,7 @@ export default [
 
       const currentTask = database.select('tasks', {'id': id})[0]
       if (!currentTask) {
-        throw new Error('non-existent task')
+        return res.writeHead(404).end('non-existent task')
       }
 
       const updatedTask = {
