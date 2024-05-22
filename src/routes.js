@@ -50,6 +50,9 @@ export default [
       if ( !title && !description ) return res.writeHead(200).end()
 
       const currentTask = database.select('tasks', {'id': id})[0]
+      if (!currentTask) {
+        throw new Error('non-existent task')
+      }
       if (currentTask.completed_at) {
         throw new Error('can NOT update an task that has been completed!')
       }
@@ -91,6 +94,9 @@ export default [
       const { id } = req.params
 
       const currentTask = database.select('tasks', {'id': id})[0]
+      if (!currentTask) {
+        throw new Error('non-existent task')
+      }
 
       const updatedTask = {
         title: currentTask.title,
