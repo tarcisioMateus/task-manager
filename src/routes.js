@@ -37,7 +37,7 @@ export default [
       
       const data = database.select('tasks', search ? {'title': search} : null )
 
-      return res.writeHead(200).end(data)
+      return res.writeHead(200).end(JSON.stringify(data))
     }
   },
   {
@@ -66,7 +66,18 @@ export default [
       }
       database.update('tasks', id, updatedTask)
 
-      return res.writeHead(201).end()
+      return res.writeHead(204).end()
+    }
+  },
+  {
+    method: "DELETE",
+    path: buildRoutePath("/tasks/:id"),
+    handler: (req, res) => {
+      const { id } = req.params
+
+      database.delete('tasks', id)
+
+      return res.writeHead(204).end()
     }
   },
 ]

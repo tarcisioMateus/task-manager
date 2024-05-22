@@ -45,4 +45,13 @@ export class Database {
       this.#persist()
     }
   }
+
+  delete(table, id) {
+    const rowIndex = this.#db[table].findIndex(row => row.id === id )
+
+    if (rowIndex > -1) {
+      this.#db[table].splice(rowIndex, 1)
+      this.#persist()
+    }
+  }
 }
