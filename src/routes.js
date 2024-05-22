@@ -80,4 +80,32 @@ export default [
       return res.writeHead(204).end()
     }
   },
+  {
+    method: "PATCH",
+    path: buildRoutePath("/tasks/:id/complete"),
+    handler: (req, res) => {
+      /* 
+      if the task has been marked as completed already,
+      using this route again will mark it as not completed
+      */
+      const { id } = req.params
+
+      const currentTask = database.select('tasks', {'id': id})[0]
+
+      const updatedTask = {
+        title: currentTask.title,
+        description: currentTask.description,
+        completed_at: Date(),
+        created_at: currentTask.created_at,
+        updated_at: Date()
+      }
+      if (currentTask.completed_at) {
+        updatedTask.completed_at = null
+      }
+
+      database.update('tasks', id, updatedTask)
+
+      return res.writeHead(204).end()
+    }
+  },
 ]
