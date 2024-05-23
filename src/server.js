@@ -3,6 +3,9 @@ import { json } from './middlewares/json.js'
 import routes from './routes.js'
 import { extractQueryParams } from './utils/extractQueryParams.js'
 
+import { importTasksFromCSV } from '../importCSV/importTasksFromCSV.js'
+const csvPath = new URL('../importCSV/tasks.csv', import.meta.url)
+
 const server = http.createServer( async (req, res) => {
   const { method, url } = req
 
@@ -26,3 +29,5 @@ const server = http.createServer( async (req, res) => {
 const PORT = 3333
 
 server.listen(PORT, console.log(`Server running on port ${PORT}`))
+
+await importTasksFromCSV(csvPath)
