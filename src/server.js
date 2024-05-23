@@ -30,4 +30,5 @@ const PORT = 3333
 
 server.listen(PORT, console.log(`Server running on port ${PORT}`))
 
-await importTasksFromCSV(csvPath)
+//uncomment the last line to import tasks from a CSV file
+//await importTasksFromCSV(csvPath)
